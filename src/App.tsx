@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Login from './pages/Login'
+import Application from './pages/Application'
+import Callback from './pages/Login/Callback'
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import { useSelector } from 'react-redux'
+import { userAction } from './store/User/User.reducer'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+interface userProps {
+  user: userAction
+}
+
+function App(): JSX.Element {
+  const loggedIn = useSelector((state: userProps) => state.user)
+  return (<Router>
+    {loggedIn.type === 'empty' ?
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Route exact path="/callback" component={Callback} />
+      </Switch>
+      :
+      <Switch>
+        <Route exact path="/" component={Application} />
+      </Switch>}
+  </Router>
   );
 }
 

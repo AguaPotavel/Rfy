@@ -8,6 +8,6 @@ export function Login (token:string) {
 export function Logout () {
     return {
         type: 'USER_LOGOUT',
-        payload: 0
+        payload: {token: ''}
     }
 }

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { userAction } from '../../store/User/User.reducer';
-import { getDevices } from '../../services/spotifyApi'
+import { useSelector } from 'react-redux';
+
 //@ts-ignore
-import Script from 'react-load-script'
+
 // import {client_id, client_secret, redirect_uri} from '../../../credentials/keys';
 // import {
 //   } from './styles';
@@ -12,18 +11,10 @@ interface stateProps{
     user: {token: string}
 }
 
-export default function Application(): JSX.Element{
+export default function Player(): JSX.Element{
   const user = useSelector((state: stateProps) => state.user);
-  const [devices, setDevices] = useState<{token: null | string}>({ token: null });;
-  
+    
   useEffect(()=>{
-    console.log(user.token);
-    async function getPromisseGetDevices(token: string){
-      const response =  await getDevices(token);
-      console.log(response);
-      setDevices(response);
-    }
-    getPromisseGetDevices(user.token);
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;

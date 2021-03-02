@@ -1,9 +1,14 @@
 export interface userAction{
     type?: string,
-    payload?: JSON
+    payload: JSON
 }
 
-export default function (state = 0, action: userAction){
+const initial = {
+    type: 'empty',
+    payload: {token : ''} 
+}
+
+export default function (state = initial, action: userAction){
     switch (action.type){
         case 'USER_LOGIN':
             return action.payload
