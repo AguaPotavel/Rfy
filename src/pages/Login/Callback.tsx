@@ -1,12 +1,6 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { userAction } from '../../store/User/User.reducer';
-import { useParams, Redirect, useLocation } from "react-router-dom";
-
-
-interface stateProps{
-    user: userAction
-}
+import { useDispatch } from 'react-redux';
+import { Redirect, useLocation } from "react-router-dom";
 
 function useQuery() {
   return new URLSearchParams(useLocation().hash);

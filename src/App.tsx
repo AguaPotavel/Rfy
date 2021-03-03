@@ -5,6 +5,7 @@ import Callback from './pages/Login/Callback'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import { userAction } from './store/User/User.reducer'
+import {withTheme} from './styles/theme'
 
 interface userProps {
   user: userAction
@@ -26,4 +27,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+export default withTheme(App);

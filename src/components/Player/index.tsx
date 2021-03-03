@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 //@ts-ignore
 
@@ -11,8 +12,14 @@ interface stateProps{
     user: {token: string}
 }
 
+interface stateProps{
+  device: {deviceId: string}
+}
+
 export default function Player(): JSX.Element{
   const user = useSelector((state: stateProps) => state.user);
+  const device = useSelector((state: stateProps) => state.device);
+  const dispatch = useDispatch();
     
   useEffect(()=>{
     const script = document.createElement("script");
@@ -29,7 +36,7 @@ export default function Player(): JSX.Element{
     console.log("Script loaded");
     const token = user.token;
     const player = new (window as any).Spotify.Player({
-      name: 'spotputo',
+      name: 'Rspotify',
       getOAuthToken: (cb:any) => { cb(token); }
     });
     console.log(player);
@@ -54,6 +61,7 @@ export default function Player(): JSX.Element{
     // Ready
     player.addListener('ready', ({ device_id }: any) => {
       console.log('Ready with Device ID', device_id);
+      dispatch({ type:'DEVICE_SET', payload: {deviceId: device_id} })
     });
 
     // Not Ready
