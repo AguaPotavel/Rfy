@@ -50,3 +50,17 @@ export async function setDeviceActive(token: string, device: string): Promise<an
     body: JSON.stringify({device_ids: [device]})
   }).then((d) => d);
 }
+
+// (async () => {
+//   const rawResponse = await fetch('https://httpbin.org/post', {
+//     method: 'POST',
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({a: 1, b: 'Textual content'})
+//   });
+//   const content = await rawResponse.json();
+
+//   console.log(content);
+// })();
