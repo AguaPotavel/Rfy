@@ -1,8 +1,8 @@
 import { createTheming } from '@callstack/react-theme-provider';
 
 export const Theme = {
-    primary: "#1db954",
-    highLight: "#3edf76",
+    primary: "#eb2d1c",
+    highLight: "#d8564a",
     dark: "#121212",
     darkGrey: "#212121",
     midGrey: "#535353",

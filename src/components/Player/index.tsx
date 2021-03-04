@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
+import { withTheme } from '../../styles/theme'
 import {
   NextSvg,
   BackSvg,
@@ -9,17 +9,14 @@ import {
   RandomSvg,
   RepeatSvg
 } from '../../assets/svg/Player';
-
-import { withTheme } from '../../styles/theme'
-import { setDeviceActive,
-  getDevices,
+import {
+  setDeviceActive,
   getCurrentUserTracking,
   playPlayer,
-  pausePlayer} from '../../services/spotifyApi'
-
-//@ts-ignore
-
-// import {client_id, client_secret, redirect_uri} from '../../../credentials/keys';
+  pausePlayer,
+  previousMusic,
+  nextMusic
+} from '../../services/spotifyApi'
 import {
   Container,
   ActionsContainer,
@@ -28,37 +25,33 @@ import {
   RangerWrapper,
   RangerProgress,
   RoundProgress,
-  PlayerContainer
+  PlayerContainer,
+  MinProgressMusic,
+  Ranger,
+  ActionItemRounded
 } from './styles';
 
-interface stateProps {
+interface userStateProps {
   user: { token: string }
 }
 
-interface stateProps {
+interface devicestateProps {
   device: { deviceId: string }
 }
 
-interface deviceProps{
-    id: string,
-    is_active: boolean,
-    is_private_session: boolean,
-    is_restricted: boolean,
-    name: string,
-    type: string,
-    volume: number
+interface deviceProps {
+  id: string,
+  is_active: boolean,
+  is_private_session: boolean,
+  is_restricted: boolean,
+  name: string,
+  type: string,
+  volume: number
 }
-
-
-interface DevicesProps{
-    devices: []
-}
-
-
 
 function Player({ theme }: any): JSX.Element {
-  const user = useSelector((state: stateProps) => state.user);
-  const device = useSelector((state: stateProps) => state.device);
+  const user = useSelector((state: userStateProps) => state.user);
+  const device = useSelector((state: devicestateProps) => state.device);
   const [playing, setPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [currentPlayerMs, setCurrentPlayerMs] = useState(0);
@@ -66,38 +59,48 @@ function Player({ theme }: any): JSX.Element {
   const dispatch = useDispatch();
   const refCurrentPlayer = useRef<any>(null);
   const refPosition = useRef<any>(null);
-  
-  
+
+  function millisToMinutesAndSeconds(millis: number) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (parseInt(seconds) < 10 ? '0' : '') + seconds;
+  }
+
+
   refCurrentPlayer.current = { currentPlayerMs, setCurrentPlayerMs };
   refPosition.current = { position, setPosition }
   useEffect(
     () => {
-      if(playing === true){
+      if (playing === true) {
         const id = setInterval(() => {
           let currentVal = refCurrentPlayer.current.currentPlayerMs + 1000;
           console.log(currentVal);
           refCurrentPlayer.current.setCurrentPlayerMs(currentVal);
-          let currentPosition = (currentVal * 100)/musicLengthMs;
-          refPosition.current.setPosition(currentPosition); 
+          let currentPosition = (currentVal * 100) / musicLengthMs;
+          refPosition.current.setPosition(currentPosition);
         }, 1000);
         return () => {
           clearInterval(id);
         };
       }
     },
-    [musicLengthMs] // empty dependency array
+    [musicLengthMs, currentPlayerMs] 
   );
 
-  async function activeDevice(device: string){
-    const playbackState = await getCurrentUserTracking(user.token);
-    // playPlayer(user.token);
-    const devices = await getDevices(user.token);
+  async function activeDevice(device: string) {
     const response = await setDeviceActive(user.token, device);
-    console.log('playbackState', playbackState);
-    console.log('Devices', devices);
-    // pausePlayer(user.token, device);
-    playPlayer(user.token);
     return response;
+  }
+
+  async function getTrack(){
+    const response = await getCurrentUserTracking(user.token);
+    const trackData = {
+      musicName: response.item.name,
+      musicAlbum: response.item.album,
+      musicArtists: response.item.artists
+    }
+    dispatch({ type: 'MUSIC_SET', payload: trackData })
+    console.log('playbackState', trackData);
   }
 
   useEffect(() => {
@@ -112,10 +115,9 @@ function Player({ theme }: any): JSX.Element {
 
 
   function handleLoadSuccess() {
-    console.log("Script loaded");
     const token = user.token;
     const player = new (window as any).Spotify.Player({
-      name: 'Redify',
+      name: 'Redfy',
       getOAuthToken: (cb: any) => { cb(token); }
     });
     console.log(player);
@@ -132,11 +134,12 @@ function Player({ theme }: any): JSX.Element {
       duration,
       track_window: { current_track }
     }: any) => {
-      console.log('Currently Playing', current_track);
-      console.log('Position in Song', position);
-      console.log('Duration of Song', duration);
+      // console.log('Currently Playing', current_track);
+      // console.log('Position in Song', position);
+      // console.log('Duration of Song', duration);
       setCurrentPlayerMs(position);
       setMusicLengthMs(duration);
+      getTrack()
     });
 
     // Ready
@@ -144,7 +147,7 @@ function Player({ theme }: any): JSX.Element {
       console.log('Ready with Device ID', device_id);
       dispatch({ type: 'DEVICE_SET', payload: { deviceId: device_id } })
       activeDevice(device_id);
-      
+
     });
 
     // Not Ready
@@ -165,34 +168,39 @@ function Player({ theme }: any): JSX.Element {
     <Container>
       <PlayerContainer>
         <ActionsContainer colorContainer={theme.midGrey}>
-          <ActionItem>
-            <RandomSvg Svgcolor={"#fff"} Svgsize={"1rem"} />
+          <ActionItem onClick={() => console.log('action')}>
+            <RandomSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
-          <ActionItem>
-            <BackSvg Svgcolor={"#fff"} Svgsize={"1rem"} />
+          <ActionItem onClick={() => previousMusic(user.token)}>
+            <BackSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
           {playing ?
-            <ActionItem>
-              <PauseSvg Svgcolor={"#fff"} Svgsize={"1.5rem"} />
-            </ActionItem>
+            <ActionItemRounded onClick={() => { pausePlayer(user.token, device.deviceId); setPlaying(false) }}>
+              <PauseSvg Svgcolor={theme.midGrey} Svgsize={"0.8rem"} />
+            </ActionItemRounded>
             :
-            <ActionItem>
-              <PlaySvg Svgcolor={"#fff"} Svgsize={"1.5rem"} />
-            </ActionItem>
+            <ActionItemRounded onClick={() => { playPlayer(user.token); setPlaying(true) }}>
+              <PlaySvg Svgcolor={theme.midGrey} Svgsize={"0.8rem"} />
+            </ActionItemRounded>
           }
-          <ActionItem>
-            <NextSvg Svgcolor={"#fff"} Svgsize={"1rem"} />
+          <ActionItem onClick={() => nextMusic(user.token)}>
+            <NextSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
-          <ActionItem>
-            <RepeatSvg Svgcolor={"#fff"} Svgsize={"1rem"} />
+          <ActionItem onClick={() => console.log('action')}>
+            <RepeatSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
         </ActionsContainer>
         <RangerContainer colorContainer={theme.midGrey}>
-          <RangerWrapper colorContainer={theme.grey} HighlightColor={theme.primary}>
-            <RangerProgress colorContainer={theme.lightGrey} HighlightColor={theme.primary} position={position} />
-            <RoundProgress colorContainer={"#fff"} />
-          </RangerWrapper>
+          <MinProgressMusic colorContainer={theme.lightGrey}>{millisToMinutesAndSeconds(currentPlayerMs)}</MinProgressMusic>
+          <Ranger>
+            <RangerWrapper colorContainer={theme.grey} HighlightColor={theme.primary}>
+              <RangerProgress colorContainer={theme.lightGrey} HighlightColor={theme.primary} position={position} />
+              <RoundProgress colorContainer={"#fff"} />
+            </RangerWrapper>
+          </Ranger>
+          <MinProgressMusic colorContainer={theme.lightGrey}>{millisToMinutesAndSeconds(musicLengthMs)}</MinProgressMusic>
         </RangerContainer>
+
       </PlayerContainer>
     </Container>
   );

@@ -9,6 +9,11 @@ interface ThemeProps{
 interface RangeProps extends ThemeProps{
     HighlightColor: string,
     position?: number
+    
+}
+
+interface ClickableDiv{
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const Container = styled.div`
@@ -18,7 +23,6 @@ export const Container = styled.div`
     align-items: center;
     flex:1;
     flex-direction: column;
-    background: red;
 `;
 
 export const ActionsContainer = styled.div<ThemeProps>`
@@ -28,11 +32,12 @@ export const ActionsContainer = styled.div<ThemeProps>`
     text-align: center;
     display: flex;
     min-width: 400px;
-    height: 50%;
+    height: 60px;
     background-color: ${p => p.colorContainer};
+    margin-bottom: -10px;
 `;
 
-export const ActionItem = styled.div`
+export const ActionItem = styled.div<ClickableDiv>`
     padding: 5px;
     margin: 5px 20px 5px;
     opacity: 0.7;
@@ -42,17 +47,38 @@ export const ActionItem = styled.div`
     }
 `;
 
+export const ActionItemRounded = styled.div<ClickableDiv>`
+    display:flex;
+    padding: 5px;
+    margin: 5px 5px 5px;
+    justify-content:center;
+    align-items: center;
+    justify-items:center;
+    opacity: 0.7;
+    background-color: #fff;
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+
+    &:hover{
+        opacity: 1;
+    }
+`;
+
 export const RangerContainer = styled.div<ThemeProps>`
     position: relative;
-    justify-content: space-between;
-    height: 50%;
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+    height: 20%;
     padding: 10px;
+    text-align: center;
     background-color: ${p => p.colorContainer};
 `;
 
 
 export const RangerProgress = styled.div<RangeProps>`
-    display: flex;
     background-color: ${p => p.colorContainer};
     height: 100%;
     width: ${p => p.position}%;
@@ -77,6 +103,7 @@ export const RoundProgress = styled.div<ThemeProps>`
 
 export const RangerWrapper = styled.div<RangeProps>`
     display: flex;
+    flex:1;
     flex-direction: row;
     background-color: ${p => p.colorContainer};
     height: 5px;
@@ -94,9 +121,21 @@ export const RangerWrapper = styled.div<RangeProps>`
 
 export const PlayerContainer = styled.div`
     flex-direction: column;
-    padding: 10px;
     max-width: 600px;
-    min-width: 300px;
+    min-width: 400px;
     width: 100%;
-    background: cyan;
+    height: 100px;
+`;
+
+export const MinProgressMusic = styled.h2<ThemeProps>`
+    font-size: 14px;
+    margin:0;
+    color: ${p => p.colorContainer};
+`;
+
+export const Ranger = styled.div`
+    display: flex;
+    flex:1;
+    padding: 10px;
+    align-items: center;
 `;
