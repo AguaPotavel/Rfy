@@ -10,7 +10,7 @@ export default function Login(): JSX.Element{
     <SpotifyAuth
       redirectUri="http://localhost:3000/callback"
       clientID="df6b61dceb4c4572a4b2a7e54431460a"
-      scopes={["streaming", "user-read-email", "user-read-private", "user-read-currently-playing", "user-read-playback-state"]} // either style will work
+      scopes={["streaming", "user-read-email", "user-read-private", "user-read-currently-playing", "user-read-playback-state", "user-modify-playback-state"]} // either style will work
     />
   </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import {
@@ -10,8 +10,12 @@ import {
   RepeatSvg
 } from '../../assets/svg/Player';
 
-import { svgProps } from '../../types/common';
 import { withTheme } from '../../styles/theme'
+import { setDeviceActive,
+  getDevices,
+  getCurrentUserTracking,
+  playPlayer,
+  pausePlayer} from '../../services/spotifyApi'
 
 //@ts-ignore
 
@@ -35,11 +39,66 @@ interface stateProps {
   device: { deviceId: string }
 }
 
+interface deviceProps{
+    id: string,
+    is_active: boolean,
+    is_private_session: boolean,
+    is_restricted: boolean,
+    name: string,
+    type: string,
+    volume: number
+}
+
+
+interface DevicesProps{
+    devices: []
+}
+
+
+
 function Player({ theme }: any): JSX.Element {
   const user = useSelector((state: stateProps) => state.user);
   const device = useSelector((state: stateProps) => state.device);
   const [playing, setPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [currentPlayerMs, setCurrentPlayerMs] = useState(0);
+  const [musicLengthMs, setMusicLengthMs] = useState(0);
   const dispatch = useDispatch();
+  const refCurrentPlayer = useRef<any>(null);
+  const refPosition = useRef<any>(null);
+  
+  
+  refCurrentPlayer.current = { currentPlayerMs, setCurrentPlayerMs };
+  refPosition.current = { position, setPosition }
+  useEffect(
+    () => {
+      if(playing === true){
+        const id = setInterval(() => {
+          let currentVal = refCurrentPlayer.current.currentPlayerMs + 1000;
+          console.log(currentVal);
+          refCurrentPlayer.current.setCurrentPlayerMs(currentVal);
+          let currentPosition = (currentVal * 100)/musicLengthMs;
+          refPosition.current.setPosition(currentPosition); 
+        }, 1000);
+        return () => {
+          clearInterval(id);
+        };
+      }
+    },
+    [musicLengthMs] // empty dependency array
+  );
+
+  async function activeDevice(device: string){
+    const playbackState = await getCurrentUserTracking(user.token);
+    // playPlayer(user.token);
+    const devices = await getDevices(user.token);
+    const response = await setDeviceActive(user.token, device);
+    console.log('playbackState', playbackState);
+    console.log('Devices', devices);
+    // pausePlayer(user.token, device);
+    playPlayer(user.token);
+    return response;
+  }
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -56,7 +115,7 @@ function Player({ theme }: any): JSX.Element {
     console.log("Script loaded");
     const token = user.token;
     const player = new (window as any).Spotify.Player({
-      name: 'Rspotify',
+      name: 'Redify',
       getOAuthToken: (cb: any) => { cb(token); }
     });
     console.log(player);
@@ -76,12 +135,16 @@ function Player({ theme }: any): JSX.Element {
       console.log('Currently Playing', current_track);
       console.log('Position in Song', position);
       console.log('Duration of Song', duration);
+      setCurrentPlayerMs(position);
+      setMusicLengthMs(duration);
     });
 
     // Ready
     player.addListener('ready', ({ device_id }: any) => {
       console.log('Ready with Device ID', device_id);
       dispatch({ type: 'DEVICE_SET', payload: { deviceId: device_id } })
+      activeDevice(device_id);
+      
     });
 
     // Not Ready
@@ -126,7 +189,7 @@ function Player({ theme }: any): JSX.Element {
         </ActionsContainer>
         <RangerContainer colorContainer={theme.midGrey}>
           <RangerWrapper colorContainer={theme.grey} HighlightColor={theme.primary}>
-            <RangerProgress colorContainer={theme.lightGrey} HighlightColor={theme.primary} position={40} />
+            <RangerProgress colorContainer={theme.lightGrey} HighlightColor={theme.primary} position={position} />
             <RoundProgress colorContainer={"#fff"} />
           </RangerWrapper>
         </RangerContainer>
