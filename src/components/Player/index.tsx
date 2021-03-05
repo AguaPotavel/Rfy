@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch} from 'react-redux';
 import { withTheme } from '../../styles/theme'
+import Draggable, {DraggableCore} from 'react-draggable';
 import {
   NextSvg,
   BackSvg,
@@ -195,7 +196,7 @@ function Player({ theme }: any): JSX.Element {
           <Ranger>
             <RangerWrapper colorContainer={theme.grey} HighlightColor={theme.primary}>
               <RangerProgress colorContainer={theme.lightGrey} HighlightColor={theme.primary} position={position} />
-              <RoundProgress colorContainer={"#fff"} />
+                <RoundProgress colorContainer={"#fff"} />
             </RangerWrapper>
           </Ranger>
           <MinProgressMusic colorContainer={theme.lightGrey}>{millisToMinutesAndSeconds(musicLengthMs)}</MinProgressMusic>

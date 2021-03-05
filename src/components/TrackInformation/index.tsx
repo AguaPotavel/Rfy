@@ -52,7 +52,7 @@ function TrackInformation({ theme }: any): JSX.Element {
                         <ArtistItem colorText={theme.lightGrey} onClick={() => console.log('print')}>
                         {item.name}
                         </ArtistItem>
-                        {artists.length > 1 ? <Comma>,</Comma>: null}
+                        {artists.length > key+1 ? <Comma>,</Comma>: null}
                         </>
                     )})}
                 </ArtistsContainer>
