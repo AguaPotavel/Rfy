@@ -4,3 +4,10 @@ export function setMusic (trackData:JSON) {
         payload: trackData
     }
 }
+
+export function setVolume (volume:number) {
+    return {
+        type: 'VOLUME_SET',
+        payload: volume
+    }
+}

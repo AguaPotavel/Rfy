@@ -2,6 +2,8 @@ import styled from 'styled-components'
 
 import { Text } from '../../styles/globalStyle';
 
+import '../../../node_modules/react-input-range/lib/css/index.css'
+
 interface ThemeProps{
     colorContainer: string
 }
@@ -14,6 +16,12 @@ interface RangeProps extends ThemeProps{
 
 interface ClickableDiv{
     onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+interface rangeProps{
+  colorBase: string,
+  colorHighlight: string,
+  colorProgress: string
 }
 
 export const Container = styled.div`
@@ -77,48 +85,6 @@ export const RangerContainer = styled.div<ThemeProps>`
     background-color: ${p => p.colorContainer};
 `;
 
-
-export const RangerProgress = styled.div<RangeProps>`
-    background-color: ${p => p.colorContainer};
-    height: 100%;
-    width: ${p => p.position}%;
-    border-radius: 4px;
-
-    &:hover{
-        background-color: ${p => p.HighlightColor};
-    }
-
-`;
-
-export const RoundProgress = styled.div<ThemeProps>`
-    display: none;
-    position: relative;
-    bottom:3px;
-    left: -3px;
-    background-color: ${p => p.colorContainer};
-    height: 10px;
-    width: 10px;
-    border-radius: 50px;
-`;
-
-export const RangerWrapper = styled.div<RangeProps>`
-    display: flex;
-    flex:1;
-    flex-direction: row;
-    background-color: ${p => p.colorContainer};
-    height: 5px;
-    border-radius: 4px;
-
-    &:hover ${RangerProgress}{
-        background-color: ${p => p.HighlightColor};
-    }
-
-    &:hover ${RoundProgress}{
-        display: flex;
-    }
-
-`;
-
 export const PlayerContainer = styled.div`
     flex-direction: column;
     max-width: 600px;
@@ -138,4 +104,49 @@ export const Ranger = styled.div`
     flex:1;
     padding: 10px;
     align-items: center;
+`;
+
+
+export const RangePlayer = styled.div<rangeProps>`
+  display: flex;
+  width: 100%;
+  height: 5px;
+  min-width: 100px;
+  justify-content: center;
+  align-items: center;
+
+  & .input-range__slider {
+  display: none;
+  }
+
+  &:hover .input-range__slider {
+  display: block;
+  background: #fff;
+  border: 0.5px solid #ddd;
+  top:-2px;
+  }
+
+  & .input-range__track {
+  background: ${props=> props.colorBase};;
+  }
+
+  & .input-range__track--active {
+  background: ${props=> props.colorProgress};
+  }
+
+  &:hover .input-range__track--active {
+  background: ${props=> props.colorHighlight};
+  }
+
+  & .input-range__label--min {
+    display:none;
+  }
+
+  & .input-range__label--max {
+    display: none;
+  }
+
+  & .input-range__label{
+    display: none;
+  }
 `;

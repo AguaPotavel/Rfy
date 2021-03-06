@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch} from 'react-redux';
 import { withTheme } from '../../styles/theme'
-import Draggable, {DraggableCore} from 'react-draggable';
+import InputRange from 'react-input-range';
 import {
   NextSvg,
   BackSvg,
@@ -16,20 +16,20 @@ import {
   playPlayer,
   pausePlayer,
   previousMusic,
-  nextMusic
+  nextMusic,
+  playSeek,
+  getPlaybackData
 } from '../../services/spotifyApi'
 import {
   Container,
   ActionsContainer,
   ActionItem,
   RangerContainer,
-  RangerWrapper,
-  RangerProgress,
-  RoundProgress,
   PlayerContainer,
   MinProgressMusic,
   Ranger,
-  ActionItemRounded
+  ActionItemRounded,
+  RangePlayer
 } from './styles';
 
 interface userStateProps {
@@ -93,6 +93,10 @@ function Player({ theme }: any): JSX.Element {
     return response;
   }
 
+  async function playerSeek(position:any){
+    return await playSeek(user.token, position)
+  }
+
   async function getTrack(){
     const response = await getCurrentUserTracking(user.token);
     const trackData = {
@@ -102,6 +106,11 @@ function Player({ theme }: any): JSX.Element {
     }
     dispatch({ type: 'MUSIC_SET', payload: trackData })
     console.log('playbackState', trackData);
+  }
+
+  async function getPlaybackInfo(){
+    const response = await getPlaybackData(user.token)
+    dispatch({ type: 'VOLUME_SET', payload: { volume: response.device.volume_percent} })
   }
 
   useEffect(() => {
@@ -141,6 +150,7 @@ function Player({ theme }: any): JSX.Element {
       setCurrentPlayerMs(position);
       setMusicLengthMs(duration);
       getTrack()
+      getPlaybackInfo()
     });
 
     // Ready
@@ -194,10 +204,13 @@ function Player({ theme }: any): JSX.Element {
         <RangerContainer colorContainer={theme.midGrey}>
           <MinProgressMusic colorContainer={theme.lightGrey}>{millisToMinutesAndSeconds(currentPlayerMs)}</MinProgressMusic>
           <Ranger>
-            <RangerWrapper colorContainer={theme.grey} HighlightColor={theme.primary}>
-              <RangerProgress colorContainer={theme.lightGrey} HighlightColor={theme.primary} position={position} />
-                <RoundProgress colorContainer={"#fff"} />
-            </RangerWrapper>
+            <RangePlayer colorBase={theme.grey} colorHighlight={theme.primary} colorProgress={theme.lightGrey}>
+            <InputRange
+                maxValue={musicLengthMs}
+                minValue={0}
+                value={currentPlayerMs}
+                onChange={(value:any) => {playerSeek(value)}} />
+            </RangePlayer>
           </Ranger>
           <MinProgressMusic colorContainer={theme.lightGrey}>{millisToMinutesAndSeconds(musicLengthMs)}</MinProgressMusic>
         </RangerContainer>

@@ -5,17 +5,20 @@ import Volume from '../../components/Volume'
 import TrackInformation from '../../components/TrackInformation'
 import { withTheme } from '../../styles/theme'
 // import {client_id, client_secret, redirect_uri} from '../../../credentials/keys';
-import {PlayerBar 
+import {LeftSidebar, PlayerBar 
   } from './style';
 
 function Application({ theme }: any): JSX.Element{
-  return (
+  return (<>
+    <LeftSidebar colorSidebar={theme.dark}>
+      
+    </LeftSidebar>
     <PlayerBar colorSidebar={theme.midGrey}>
       <TrackInformation/>
       <Player/>
       <Volume/>
     </PlayerBar>
-  );
+  </>);
 }
 
 export default withTheme(Application);

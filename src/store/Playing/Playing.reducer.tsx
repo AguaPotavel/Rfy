@@ -5,13 +5,17 @@ export interface trackAction{
 
 const initial = {
     type: 'empty',
-    payload: {} 
+    trackData: {},
+    volume: 0
 }
 
 export default function (state = initial, action: trackAction){
     switch (action.type){
         case 'MUSIC_SET':
-            return action.payload
+            return {...state, ...action.payload}
+
+        case 'VOLUME_SET':
+            return {...state, ...action.payload}
 
         default:
             return state

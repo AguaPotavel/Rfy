@@ -8,6 +8,15 @@ export async function getDevices(token: string): Promise<any> {
       }).then((d) => d.json());
 }
 
+export async function getPlaybackData(token: string): Promise<any>{
+  return fetch(`https://api.spotify.com/v1/me/player`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  }).then((d) => d.json());
+}
 
 export async function getCurrentUserTracking(token: string): Promise<any> {
   return fetch(`https://api.spotify.com/v1/me/player/currently-playing?market=US`, {
@@ -31,6 +40,27 @@ export async function pausePlayer(token: string, device:string): Promise<any> {
 
 export async function playPlayer(token: string): Promise<any> {
   return fetch(`https://api.spotify.com/v1/me/player/play`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'PUT',
+    }).then((d) => d);
+}
+
+export async function playSeek(token: string, position:number): Promise<any> {
+  return fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${position}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'PUT',
+    }).then((d) => d);
+}
+
+
+export async function setVolume(token: string, volume:number): Promise<any> {
+  return fetch(`https://api.spotify.com/v1/me/player/volume?volume_percent=${volume}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'

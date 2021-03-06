@@ -23,8 +23,12 @@ export const PhotoContainer = styled.div<ImageProps>`
     display: flex;
     width: 40px;
     height: 40px;
-    background-image: url(${props => props.image});
     margin: 10px;
+
+    & img{
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 export const ArtistsContainer = styled.div`

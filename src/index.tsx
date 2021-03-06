@@ -5,15 +5,18 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store'
 import { Provider } from 'react-redux'
-import {ThemeProvider, Theme} from './styles/theme'
+import { ThemeProvider, Theme } from './styles/theme'
+import { CookiesProvider } from 'react-cookie';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={Theme}>
-        <App />
-      </ThemeProvider>
-    </Provider>
+    <CookiesProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={Theme}>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    </CookiesProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
