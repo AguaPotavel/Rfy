@@ -26,9 +26,9 @@ export const LeftSidebar = styled.div<BarProps>`
     display:block;
     height: 100%;
     width: 20%;
+    min-width: 250px;
     background-color: ${props=> props.colorSidebar};
     position: absolute;
     top:0;
-    left:0;
-    overflow-y: scroll;
+    left:0;  
 `;
