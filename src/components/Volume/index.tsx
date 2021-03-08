@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {withTheme} from '../../styles/theme'
-import { RangeVolume, Container } from "./style";
+import { RangeVolume, Container } from "./styles";
 import InputRange from 'react-input-range';
 import { setVolume } from '../../services/spotifyApi'
 import { useSelector, useDispatch } from 'react-redux';

@@ -7,7 +7,8 @@ export const Theme = {
     darkGrey: "#212121",
     midGrey: "#535353",
     grey: "#8f8e8e",
-    lightGrey: "#e9e8e8"
+    lightGrey: "#e9e8e8",
+    white: "#fff"
 }
 
 export interface themeProps{

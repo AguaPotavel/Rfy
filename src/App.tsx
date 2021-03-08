@@ -6,6 +6,7 @@ import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import { userAction } from './store/User/User.reducer'
 import {withTheme} from './styles/theme'
+import { useCookies } from 'react-cookie';
 
 interface userProps {
   user: userAction
@@ -13,6 +14,9 @@ interface userProps {
 
 function App(): JSX.Element {
   const loggedIn = useSelector((state: userProps) => state.user)
+  const [cookies, setCookie]= useCookies(['token'])
+  
+  console.log(cookies)
   return (<Router>
     {loggedIn.type === 'empty' ?
       <Switch>
