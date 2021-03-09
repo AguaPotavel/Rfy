@@ -21,13 +21,13 @@ export const Container = styled.div`
 
 export const PhotoContainer = styled.div<ImageProps>`
     display: flex;
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
     margin: 10px;
 
     & img{
-        width: 40px;
-        height: 40px;
+        width: 64px;
+        height: 64px;
     }
 `;
 

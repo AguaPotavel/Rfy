@@ -31,19 +31,22 @@ interface stateProps {
 function TrackInformation({ theme }: any): JSX.Element {
     const track = useSelector((state: stateProps) => state.music);
     const [artists, setArtists] = useState([])
-    console.log('track',track);
+    const [image, setImage] = useState('');
+    // console.log('track',track);
 
     useEffect(()=>{
-        console.log(track)
+        // console.log(track)
         if(track.musicArtists !== undefined){
             setArtists(track.musicArtists);
+            let musicImages = track.musicAlbum.images;
+            if(musicImages.length > 0) setImage(musicImages[0].url)
         }
     }, [track])
 
     return (
         <Container>
             <PhotoContainer>
-                <img src={'https://i.scdn.co/image/8e13218039f81b000553e25522a7f0d7a0600f2e'} alt="Logo" />
+                <img src={image} alt="Logo" />
             </PhotoContainer>
             <InfoContainer>
                 <MusicTitle><span>{track.musicName}</span></MusicTitle>

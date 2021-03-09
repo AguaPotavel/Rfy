@@ -101,3 +101,13 @@ export async function previousMusic(token: string): Promise<any>{
     method: 'POST',
   }).then((d) => d);
 }
+
+export async function Playlists(token: string, offset:number): Promise<any>{
+  return fetch(`https://api.spotify.com/v1/me/playlists?offset=${offset}&limit=20`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  }).then((d) => d.json());
+}

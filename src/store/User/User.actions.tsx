@@ -5,6 +5,13 @@ export function Login (token:string) {
     }
 }
 
+export function setPlaylists (playlists:JSON) {
+    return {
+        type: 'USER_SET_PLAYLISTS',
+        payload: {userPlaylists: playlists}
+    }
+}
+
 export function Logout () {
     return {
         type: 'USER_LOGOUT',

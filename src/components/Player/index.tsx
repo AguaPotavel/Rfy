@@ -60,6 +60,7 @@ function Player({ theme }: any): JSX.Element {
   const dispatch = useDispatch();
   const refCurrentPlayer = useRef<any>(null);
   const refPosition = useRef<any>(null);
+  // console.log(user);
 
   function millisToMinutesAndSeconds(millis: number) {
     var minutes = Math.floor(millis / 60000);
@@ -75,7 +76,7 @@ function Player({ theme }: any): JSX.Element {
       if (playing === true) {
         const id = setInterval(() => {
           let currentVal = refCurrentPlayer.current.currentPlayerMs + 1000;
-          console.log(currentVal);
+          // console.log(currentVal);
           refCurrentPlayer.current.setCurrentPlayerMs(currentVal);
           let currentPosition = (currentVal * 100) / musicLengthMs;
           refPosition.current.setPosition(currentPosition);
@@ -105,7 +106,7 @@ function Player({ theme }: any): JSX.Element {
       musicArtists: response.item.artists
     }
     dispatch({ type: 'MUSIC_SET', payload: trackData })
-    console.log('playbackState', trackData);
+    // console.log('playbackState', trackData);
   }
 
   async function getPlaybackInfo(){
@@ -130,7 +131,7 @@ function Player({ theme }: any): JSX.Element {
       name: 'Redfy',
       getOAuthToken: (cb: any) => { cb(token); }
     });
-    console.log(player);
+    // console.log(player);
 
     // Error handling
     player.addListener('initialization_error', ({ message }: any) => { console.error(message); });

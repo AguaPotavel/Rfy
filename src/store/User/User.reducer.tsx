@@ -5,16 +5,20 @@ export interface userAction{
 
 const initial = {
     type: 'empty',
-    payload: {token : ''} 
+    token : '',
+    userPlaylists: {} 
 }
 
 export default function (state = initial, action: userAction){
     switch (action.type){
         case 'USER_LOGIN':
-            return action.payload
+            return {...state, ...action.payload, type:"logged"}
 
         case 'USER_LOGOUT':
             return action.payload
+
+        case 'USER_SET_PLAYLISTS':
+            return {...state, ...action.payload}
 
         default:
             return state

@@ -9,6 +9,10 @@ interface ClickableDiv{
     isSelected: boolean
 }
 
+interface ItemPlaylistProps extends ClickableDiv{
+    isBold: boolean;
+}
+
 export const Container = styled.div`
     justify-content: left;
     align-items: left;
@@ -25,7 +29,7 @@ export const IconContainer = styled.div`
 
 export const IconItem = styled.div<ClickableDiv>`
     position: relative;
-    left: 50px;
+    left: 25px;
     justify-content: left;
     display: flex;
     align-items: center;
@@ -48,16 +52,16 @@ export const IconItem = styled.div<ClickableDiv>`
 
 export const HighlightSelected = styled.div<HighlightProps>`
     height: 50%;
-    width: 0.3rem;
+    width: 0.2rem;
     position: absolute;
-    left:-50px;
+    left:-25px;
     background-color: ${props=> props.colorBase};
 `;
 
 export const PlaylistsContainer = styled.div`
-    margin-top: 25px;
     width: 100%;
     height:20rem;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow-y: scroll;    /* Trigger vertical scroll    */
@@ -109,22 +113,54 @@ export const PlaylistsContainer = styled.div`
     }
 `;
 
-export const PlaylistItem = styled.div`
+export const PlaylistItem = styled.div<ItemPlaylistProps>`
+    white-space: nowrap;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
     text-align: center;
     font-size: 1rem;
     color: white;
-    margin-bottom: 40px;
+    margin-bottom: 5px;
     display: flex;
+    opacity: ${props=> props.isSelected ? 1 : 0.8};
+    font-weight: ${props=> props.isBold ? 'bold' : 'normal'};
+
+    &:hover{
+        opacity: 1;
+    }
+
+    &::after{
+        content: "";
+        position: relative;
+        left: -77px;
+        width: 0.2rem;
+        height: 20px;
+        padding-top:2px;
+        background-color: red;
+        ${props=> props.isSelected ? null: 'display: none'};
+        };
 `;
 
-export const YourLibrary = styled.div`
-    display: flex;
-    
 
-`;
 
 export const YourPlaylist = styled.div`
-    
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 0.5rem;
+    padding: 5px;
+    padding-left: 25px;   
+    cursor: default;
+
+    & label{
+        margin-top: 25px;
+        opacity: 0.8;
+        color: white;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+    }
 
 `;
 
