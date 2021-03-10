@@ -11,26 +11,26 @@ function useQuery() {
 export default function Callback(): JSX.Element{
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['token']);
-  const [redirect, setRedirect] = useState(false)
   let query = useQuery();
+  let accessToken;
 
   useEffect(()=>{
-      async function getPlaylists(){
+      async function getData(token: any){
         let offset = 0;
         let isOver = false;
         let playlists:any = [] 
         while(!isOver){
-            const response = await Playlists(cookies.token, offset);
+            const response = await Playlists(token, offset);
             offset += 20;
             playlists = [...playlists, ...response.items]
             if (response.next == null) isOver = true;
         }
+        setCookie('token', token, { path: '/' });
         dispatch({ type:'USER_SET_PLAYLISTS', payload: {userPlaylists: playlists}})
       }
-      dispatch({ type:'USER_LOGIN', payload: {token: query.get('#access_token')}})
-      setCookie('token', query.get('#access_token'), { path: '/' });
-      getPlaylists();
-
+      accessToken = query.get('#access_token');
+      getData(accessToken);
+      
   }, [])
   
   return (

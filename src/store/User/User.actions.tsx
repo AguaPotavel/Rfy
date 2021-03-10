@@ -12,6 +12,13 @@ export function setPlaylists (playlists:JSON) {
     }
 }
 
+export function setSelected (name: string) {
+    return {
+        type: 'USER_SET_SELECTION',
+        payload: {selected: name}
+    }
+}
+
 export function Logout () {
     return {
         type: 'USER_LOGOUT',

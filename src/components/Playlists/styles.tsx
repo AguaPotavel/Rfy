@@ -25,18 +25,21 @@ export const IconContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin: 15px 0px 15px;
 `;
 
 export const IconItem = styled.div<ClickableDiv>`
     position: relative;
-    left: 25px;
     justify-content: left;
     display: flex;
     align-items: center;
     flex-direction: row;
     color: #fff;
-    margin-bottom: -10px;
+    height: 1.8rem;
     opacity: ${props=> props.isSelected ? 1 : 0.8};
+    border-left: ${props=> props.isSelected ? '2px solid red': 'none'};
+    padding-left: ${props=> props.isSelected ? '28px': '30px'};
+    margin: 5px 0px 5px;
 
     & h1{
         margin: 1rem;
@@ -122,23 +125,15 @@ export const PlaylistItem = styled.div<ItemPlaylistProps>`
     color: white;
     margin-bottom: 5px;
     display: flex;
+    width: 100%;
     opacity: ${props=> props.isSelected ? 1 : 0.8};
     font-weight: ${props=> props.isBold ? 'bold' : 'normal'};
+    border-left: ${props=> props.isSelected ? '2px solid red': 'none'};
+    padding-left: ${props=> props.isSelected ? '28px': '30px'};
 
     &:hover{
         opacity: 1;
     }
-
-    &::after{
-        content: "";
-        position: relative;
-        left: -77px;
-        width: 0.2rem;
-        height: 20px;
-        padding-top:2px;
-        background-color: red;
-        ${props=> props.isSelected ? null: 'display: none'};
-        };
 `;
 
 
@@ -148,8 +143,7 @@ export const YourPlaylist = styled.div`
     width: 100%;
     flex-direction: column;
     height: 0.5rem;
-    padding: 5px;
-    padding-left: 25px;   
+    padding: 5px 0px 5px;   
     cursor: default;
 
     & label{
@@ -160,6 +154,7 @@ export const YourPlaylist = styled.div`
         text-transform: uppercase;
         font-size: 0.8rem;
         letter-spacing: 2px;
+        padding-left: 30px;
     }
 
 `;

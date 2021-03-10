@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch} from 'react-redux';
 import { withTheme } from '../../styles/theme'
 import InputRange from 'react-input-range';
+import { useCookies } from 'react-cookie';
 import {
   NextSvg,
   BackSvg,
@@ -58,6 +59,7 @@ function Player({ theme }: any): JSX.Element {
   const [currentPlayerMs, setCurrentPlayerMs] = useState(0);
   const [musicLengthMs, setMusicLengthMs] = useState(0);
   const dispatch = useDispatch();
+  const [cookies, setCookie]= useCookies(['token'])
   const refCurrentPlayer = useRef<any>(null);
   const refPosition = useRef<any>(null);
   // console.log(user);
@@ -90,16 +92,16 @@ function Player({ theme }: any): JSX.Element {
   );
 
   async function activeDevice(device: string) {
-    const response = await setDeviceActive(user.token, device);
+    const response = await setDeviceActive(cookies.token, device);
     return response;
   }
 
   async function playerSeek(position:any){
-    return await playSeek(user.token, position)
+    return await playSeek(cookies.token, position)
   }
 
   async function getTrack(){
-    const response = await getCurrentUserTracking(user.token);
+    const response = await getCurrentUserTracking(cookies.token);
     const trackData = {
       musicName: response.item.name,
       musicAlbum: response.item.album,
@@ -110,7 +112,7 @@ function Player({ theme }: any): JSX.Element {
   }
 
   async function getPlaybackInfo(){
-    const response = await getPlaybackData(user.token)
+    const response = await getPlaybackData(cookies.token)
     dispatch({ type: 'VOLUME_SET', payload: { volume: response.device.volume_percent} })
   }
 
@@ -126,7 +128,7 @@ function Player({ theme }: any): JSX.Element {
 
 
   function handleLoadSuccess() {
-    const token = user.token;
+    const token = cookies.token;
     const player = new (window as any).Spotify.Player({
       name: 'Redfy',
       getOAuthToken: (cb: any) => { cb(token); }
@@ -183,19 +185,19 @@ function Player({ theme }: any): JSX.Element {
           <ActionItem onClick={() => console.log('action')}>
             <RandomSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
-          <ActionItem onClick={() => previousMusic(user.token)}>
+          <ActionItem onClick={() => previousMusic(cookies.token)}>
             <BackSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
           {playing ?
-            <ActionItemRounded onClick={() => { pausePlayer(user.token, device.deviceId); setPlaying(false) }}>
+            <ActionItemRounded onClick={() => { pausePlayer(cookies.token, device.deviceId); setPlaying(false) }}>
               <PauseSvg Svgcolor={theme.midGrey} Svgsize={"0.8rem"} />
             </ActionItemRounded>
             :
-            <ActionItemRounded onClick={() => { playPlayer(user.token); setPlaying(true) }}>
+            <ActionItemRounded onClick={() => { playPlayer(cookies.token); setPlaying(true) }}>
               <PlaySvg Svgcolor={theme.midGrey} Svgsize={"0.8rem"} />
             </ActionItemRounded>
           }
-          <ActionItem onClick={() => nextMusic(user.token)}>
+          <ActionItem onClick={() => nextMusic(cookies.token)}>
             <NextSvg Svgcolor={"#fff"} Svgsize={"0.7rem"} />
           </ActionItem>
           <ActionItem onClick={() => console.log('action')}>

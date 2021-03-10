@@ -6,7 +6,8 @@ export interface userAction{
 const initial = {
     type: 'empty',
     token : '',
-    userPlaylists: {} 
+    userPlaylists: {},
+    selected: ''
 }
 
 export default function (state = initial, action: userAction){
@@ -18,6 +19,9 @@ export default function (state = initial, action: userAction){
             return action.payload
 
         case 'USER_SET_PLAYLISTS':
+            return {...state, ...action.payload}
+
+        case 'USER_SET_SELECTION':
             return {...state, ...action.payload}
 
         default:
