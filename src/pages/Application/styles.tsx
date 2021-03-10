@@ -25,8 +25,8 @@ export const PlayerBar = styled.div<BarProps>`
 export const LeftSidebar = styled.div<BarProps>`
     display:block;
     height: 100%;
-    width: 20%;
-    min-width: 250px;
+    width: 250px;
+    /* min-width: 250px; */
     background-color: ${props=> props.colorSidebar};
     position: absolute;
     top:0;

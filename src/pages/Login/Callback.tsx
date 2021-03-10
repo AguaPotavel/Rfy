@@ -3,12 +3,14 @@ import { useDispatch } from 'react-redux';
 import { Redirect, useLocation } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { Playlists } from '../../services/spotifyApi'
+import { useHistory } from "react-router-dom";
 
 function useQuery() {
   return new URLSearchParams(useLocation().hash);
 }
 
 export default function Callback(): JSX.Element{
+  let history = useHistory();
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['token']);
   let query = useQuery();
@@ -30,10 +32,11 @@ export default function Callback(): JSX.Element{
       }
       accessToken = query.get('#access_token');
       getData(accessToken);
+      history.push("/");
       
   }, [])
   
   return (
-    <Redirect to="/"/>
+    <></>
   );
 }

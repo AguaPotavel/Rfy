@@ -34,11 +34,9 @@ interface stateProps {
 
 function Playlist({ theme }: any): JSX.Element {
     const [isLoading, setIsLoading] = useState(true)
-    const [isSelected, setIsSelected] = useState({home: false, collection: false, radio: true});
     const [PlaylistArray, setPlaylistArray] = useState([])
     const playListStored = useSelector((state: stateProps) => state.user.userPlaylists);
     const PlaylistSelected = useSelector((state: stateProps) => state.user.selected);
-    const [cookies, setCookie]= useCookies(['token'])
     const dispatch = useDispatch();
     // console.log('playlists', PlaylistSelected);
 

@@ -4,6 +4,7 @@ import Application from './pages/Application'
 import Callback from './pages/Login/Callback'
 import PlaylistPage from './pages/PlaylistPage';
 import TrackPage from './pages/TrackPage'
+import Home from './pages/Home'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { userAction } from './store/User/User.reducer'
@@ -55,7 +56,7 @@ function App(): JSX.Element {
       <div>
         <Application/>
       <Switch>
-          <Route exact path="/" render={()=>''}/> 
+          <Route exact path="/" render={Home}/> 
           <Route path="/Tracks" render={TrackPage}/>
           <Route path="/Playlist" render={PlaylistPage} />
       </Switch>
